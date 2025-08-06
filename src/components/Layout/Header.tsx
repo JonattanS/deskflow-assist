@@ -1,4 +1,4 @@
-import { Bell, User, Settings } from "lucide-react";
+import { Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -6,6 +6,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { UserMenu } from "../UserMenu"; // Ajusta la ruta si está en otra carpeta
 
 export const Header = () => {
   return (
@@ -29,22 +31,8 @@ export const Header = () => {
             </span>
           </Button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>
-                <Settings className="h-4 w-4 mr-2" />
-                Configuración
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                Cerrar Sesión
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Aquí usamos el UserMenu que adapta la lógica desde el contexto */}
+          <UserMenu />
         </div>
       </div>
     </header>
