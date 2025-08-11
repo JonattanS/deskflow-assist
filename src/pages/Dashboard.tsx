@@ -5,11 +5,13 @@ import { ServiceCard } from "@/components/Dashboard/ServiceCard";
 import { DocumentForm } from "@/components/Forms/DocumentForm";
 import { QuoteForm } from "@/components/Forms/QuoteForm";
 import { NotificationForm } from "@/components/Forms/NotificationForm";
+import { useToast } from "@/hooks/use-toast";
 
 type ActiveView = "dashboard" | "documents" | "quotes" | "notifications";
 
 export const Dashboard = () => {
   const [activeView, setActiveView] = useState<ActiveView>("dashboard");
+  const { toast } = useToast();
 
   const executePythonScript = async () => {
     try {
@@ -23,13 +25,49 @@ export const Dashboard = () => {
       if (response.ok) {
         const result = await response.text();
         console.log('Comunicado.py ejecutado:', result);
-        alert('Programa Comunicado.py ejecutado exitosamente');
+        toast({
+          title: " Ejecución Exitosa",
+          description: "Documentos generados exitosamente.",
+        });
       } else {
         throw new Error('Error al ejecutar el programa');
       }
     } catch (error) {
       console.error('Error:', error);
-      alert('Error al ejecutar Comunicado.py');
+      toast({
+        title: " Error de Ejecución",
+        description: "No se pudo ejecutar Comunicado.py. Verifica que el servidor esté activo.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const executeRenovacionScript = async () => {
+    try {
+      const response = await fetch('http://localhost:3011/execute-renovacion', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const result = await response.text();
+        console.log('Renovacion1.py ejecutado:', result);
+        toast({
+          title: " Renovación Exitosa",
+          description: "Documentos generados exitosamente.",
+        });
+      } else {
+        throw new Error('Error al ejecutar el programa');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      toast({
+        title: " Error de Ejecución",
+        description: "No se pudo ejecutar Renovacion1.py. Verifica que el servidor esté activo.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -43,10 +81,10 @@ export const Dashboard = () => {
     },
     {
       title: "Generar Cotizaciones",
-      description: "Elabora cotizaciones profesionales con cálculos automáticos, términos y condiciones personalizables.",
+      description: "Ejecuta el programa Renovacion1.py para generar cotizaciones y renovaciones.",
       icon: Calculator,
       variant: "secondary" as const,
-      onClick: () => setActiveView("quotes")
+      onClick: executeRenovacionScript
     },
     {
       title: "Notificaciones Automatizadas",
