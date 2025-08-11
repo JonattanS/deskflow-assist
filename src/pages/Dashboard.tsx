@@ -11,13 +11,35 @@ type ActiveView = "dashboard" | "documents" | "quotes" | "notifications";
 export const Dashboard = () => {
   const [activeView, setActiveView] = useState<ActiveView>("dashboard");
 
+  const executePythonScript = async () => {
+    try {
+      const response = await fetch('http://localhost:3010/execute-comunicado', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (response.ok) {
+        const result = await response.text();
+        console.log('Comunicado.py ejecutado:', result);
+        alert('Programa Comunicado.py ejecutado exitosamente');
+      } else {
+        throw new Error('Error al ejecutar el programa');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Error al ejecutar Comunicado.py');
+    }
+  };
+
   const services = [
     {
       title: "Generar Comunicados",
-      description: "Crea documentos oficiales, memorándums, circulares y notificaciones empresariales con formato estándar.",
+      description: "Ejecuta el programa Comunicado.py para generar documentos oficiales.",
       icon: FileText,
       variant: "primary" as const,
-      onClick: () => setActiveView("documents")
+      onClick: executePythonScript
     },
     {
       title: "Generar Cotizaciones",
