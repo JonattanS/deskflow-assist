@@ -4,10 +4,11 @@ import os
 from datetime import datetime
 
 # Rutas
-EXCEL_PATH = "clientes.xlsx"  
+ONEDRIVE_PATH = r"C:\Users\MCAÑAS\OneDrive - Nova Corp SAS"
+EXCEL_PATH = os.path.join(ONEDRIVE_PATH, "Documentos", "clientes.xlsx")
 TEMPLATE_PATH1 = "PROPUESTA FE Y NE RENOVACION 202X -CLIENTE1.docx"
 TEMPLATE_PATH2 = "PROPUESTA FE RENOVACION 202X -CLIENTE2.docx"
-OUTPUT_DIR = "cartas_generadas"
+OUTPUT_DIR = os.path.join(ONEDRIVE_PATH, "Documentos_Generados", "Renovaciones")
 
 # Crear carpeta de salida si no existe
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -84,8 +85,16 @@ for idx, row in df.iterrows():
     cliente_dir = os.path.join(OUTPUT_DIR, nit)
     os.makedirs(cliente_dir, exist_ok=True)
 
+    # Agregar mapeo específico para RAZÓN SOCIAL
+    datos_cliente = row.to_dict()
+    if 'RAZÓN SOCIAL' in datos_cliente or 'Razón Social' in datos_cliente:
+        # Usar el campo tal como está en el Excel
+        pass
+    elif 'Razon Social' in datos_cliente:
+        datos_cliente['RAZÓN SOCIAL'] = datos_cliente['Razon Social']
+    
     # Reemplazar etiquetas
-    reemplazar_etiquetas(doc, row.to_dict())
+    reemplazar_etiquetas(doc, datos_cliente)
 
     # Guardar documento
     nombre_archivo = os.path.join(cliente_dir, f"Renovacion_{datetime.now().year}_{nit}.docx")
